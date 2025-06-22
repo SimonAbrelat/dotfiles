@@ -1,0 +1,65 @@
+# .bashrc
+
+
+#------------------------------------------------------------------------------
+# Prompt 
+#------------------------------------------------------------------------------
+source ~/.config/bash/git.sh
+PROMPT_COMMAND=__prompt_command
+function __prompt_command() {
+    
+    PS1="\[\e[95;1m\]\u\[\e[0m\]:\[\e[93;3m\]$(ppwd)\[\e[0m\] " 
+
+    if _git_is_instance
+    then
+        if _git_is_dirty
+        then
+            #echo "($(_git_parse_branch) *)"
+            PS1+="\[\e[91;1m\]($(_git_parse_branch) *)"
+        else
+            #echo "($(_git_parse_branch))"
+            PS1+="\[\e[92;1m\]($(_git_parse_branch))"
+        fi
+    fi
+    PS1+='\[\e[0m\]> '
+}
+
+#------------------------------------------------------------------------------
+# Generic Bash 
+#------------------------------------------------------------------------------
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+	for rc in ~/.bashrc.d/*; do
+		if [ -f "$rc" ]; then
+			. "$rc"
+		fi
+	done
+fi
+
+unset rc
+
+#------------------------------------------------------------------------------
+# TMUX 
+#------------------------------------------------------------------------------
+# if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+#   tmux attach-session -t default || tmux new-session -s default
+# fi
+
+source ~/.config/bash/aliases.sh # aliases
+source ~/.config/bash/home.sh    # user-defined home variables
+
